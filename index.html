@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#071A3B">
     <title>JAFUNG Online</title>
 
-    <!-- Favicon tetap dipertahankan -->
+    <!-- Favicon tetap -->
     <link rel="icon" type="image/x-icon" href="favicon.ico?v=2">
 
     <style>
@@ -25,7 +25,7 @@
             background: #071A3B;
         }
 
-        /* Aplikasi utama */
+        /* Aplikasi utama: tidak diubah */
         #appFrame {
             position: fixed;
             inset: 0;
@@ -75,42 +75,49 @@
             pointer-events: none;
         }
 
-        /* Lingkaran teknologi */
+        /* Wadah logo dan spinner */
         .logo-wrap {
             position: relative;
-            width: 104px;
-            height: 104px;
+            width: 124px;
+            height: 124px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-bottom: 8px;
+            flex-shrink: 0;
             isolation: isolate;
         }
 
-        .logo-wrap::before,
+        /* Cincin cahaya dasar */
         .logo-wrap::after {
             content: "";
             position: absolute;
-            inset: -8px;
-            border: 1px solid rgba(125, 190, 255, .65);
+            inset: 5px;
+            border: 1px solid rgba(125, 190, 255, .24);
             border-radius: 50%;
             pointer-events: none;
-            transform-origin: center;
-            animation: orbit 3s linear infinite;
-            -webkit-animation: orbit 3s linear infinite;
         }
 
-        .logo-wrap::after {
-            inset: -16px;
-            border-color: rgba(125, 190, 255, .3);
-            border-style: dashed;
-            animation-direction: reverse;
-            animation-duration: 5s;
-            -webkit-animation-direction: reverse;
-            -webkit-animation-duration: 5s;
+        /* Spinner bercahaya yang mengelilingi logo */
+        .logo-wrap::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border: 3px solid rgba(96, 165, 250, .16);
+            border-top-color: #FFFFFF;
+            border-right-color: #60A5FA;
+            border-radius: 50%;
+            box-shadow:
+                0 0 7px rgba(96, 165, 250, .32),
+                inset 0 0 4px rgba(96, 165, 250, .10);
+            pointer-events: none;
+
+            /* Animasi utama spinner */
+            -webkit-animation: logoSpinner 1.2s linear infinite;
+            animation: logoSpinner 1.2s linear infinite;
         }
 
-        /* Logo memakai favicon.ico yang sudah ada */
+        /* Logo favicon: tetap sama */
         .logo {
             display: block;
             position: relative;
@@ -121,10 +128,10 @@
             padding: 8px;
             border-radius: 22px;
             background: #fff;
-            box-shadow: 0 0 28px rgba(76, 165, 255, .4);
-            transform-origin: center;
-            animation: breathe 2s ease-in-out infinite;
-            -webkit-animation: breathe 2s ease-in-out infinite;
+            box-shadow: 0 0 22px rgba(76, 165, 255, .32);
+
+            -webkit-animation: breathe 2.5s ease-in-out infinite;
+            animation: breathe 2.5s ease-in-out infinite;
         }
 
         .app-title {
@@ -142,51 +149,19 @@
             letter-spacing: .3px;
         }
 
+        /* Teks loading saja, tanpa garis animasi */
         .loading-area {
             width: min(230px, 75vw);
             margin-top: 20px;
         }
 
-        /* Jalur loading */
-        .progress-track {
-            position: relative;
-            width: 100%;
-            height: 5px;
-            overflow: hidden;
-            border-radius: 20px;
-            background: rgba(255, 255, 255, .20);
-            transform: translateZ(0);
-            -webkit-transform: translateZ(0);
-            isolation: isolate;
-        }
-
-        /* Garis bergerak: menggunakan left agar lebih kompatibel */
-        .progress-bar {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: -40%;
-            width: 40%;
-            height: 100%;
-            border-radius: 20px;
-            background: linear-gradient(
-                90deg,
-                #60A5FA,
-                #FFFFFF,
-                #60A5FA
-            );
-            box-shadow: 0 0 10px rgba(96, 165, 250, .8);
-            will-change: left;
-            animation: progressMobile 1.3s linear infinite;
-            -webkit-animation: progressMobile 1.3s linear infinite;
-        }
-
         .loading-text {
-            margin-top: 13px;
+            margin-top: 4px;
             color: #D6E7FF;
             font-size: 12px;
-            animation: pulse 1.5s ease-in-out infinite;
-            -webkit-animation: pulse 1.5s ease-in-out infinite;
+
+            -webkit-animation: pulse 1.8s ease-in-out infinite;
+            animation: pulse 1.8s ease-in-out infinite;
         }
 
         .footer {
@@ -197,59 +172,53 @@
             letter-spacing: .5px;
         }
 
-        /* Animasi lingkaran */
-        @keyframes orbit {
-            from { transform: rotate(0deg); }
-            to   { transform: rotate(360deg); }
+        /* Putaran spinner */
+        @-webkit-keyframes logoSpinner {
+            from {
+                -webkit-transform: rotate(0deg);
+            }
+            to {
+                -webkit-transform: rotate(360deg);
+            }
         }
 
-        @-webkit-keyframes orbit {
-            from { -webkit-transform: rotate(0deg); }
-            to   { -webkit-transform: rotate(360deg); }
+        @keyframes logoSpinner {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
-        /* Animasi logo */
-        @keyframes breathe {
-            0%, 100% { transform: scale(1); }
-            50%      { transform: scale(1.045); }
-        }
-
+        /* Efek napas ringan pada logo */
         @-webkit-keyframes breathe {
-            0%, 100% { -webkit-transform: scale(1); }
-            50%      { -webkit-transform: scale(1.045); }
+            0%, 100% {
+                -webkit-transform: scale(1);
+            }
+            50% {
+                -webkit-transform: scale(1.035);
+            }
         }
 
-        /* Animasi garis loading */
-        @keyframes progressMobile {
-            0%   { left: -40%; }
-            100% { left: 100%; }
-        }
-
-        @-webkit-keyframes progressMobile {
-            0%   { left: -40%; }
-            100% { left: 100%; }
+        @keyframes breathe {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.035);
+            }
         }
 
         /* Animasi teks */
-        @keyframes pulse {
-            0%, 100% { opacity: .65; }
-            50%      { opacity: 1; }
-        }
-
         @-webkit-keyframes pulse {
-            0%, 100% { opacity: .65; }
-            50%      { opacity: 1; }
+            0%, 100% { opacity: .7; }
+            50% { opacity: 1; }
         }
 
-        /* Tetap menghormati pengaturan aksesibilitas pengguna */
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after {
-                animation-duration: .01ms !important;
-                -webkit-animation-duration: .01ms !important;
-                animation-iteration-count: 1 !important;
-                -webkit-animation-iteration-count: 1 !important;
-                transition-duration: .01ms !important;
-            }
+        @keyframes pulse {
+            0%, 100% { opacity: .7; }
+            50% { opacity: 1; }
         }
     </style>
 </head>
@@ -274,10 +243,6 @@
         </p>
 
         <div class="loading-area">
-            <div class="progress-track">
-                <div class="progress-bar"></div>
-            </div>
-
             <div class="loading-text">
                 Menghubungkan ke aplikasi...
             </div>
@@ -286,7 +251,7 @@
         <div class="footer"></div>
     </div>
 
-    <!-- Aplikasi Google Apps Script: URL tetap -->
+    <!-- Google Apps Script: URL tetap -->
     <iframe
         id="appFrame"
         title="Aplikasi JAFUNG Online"
