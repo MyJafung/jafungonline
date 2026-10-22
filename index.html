@@ -119,20 +119,24 @@
 
         /* Logo favicon: tetap sama */
         .logo {
-            display: block;
-            position: relative;
-            z-index: 1;
-            width: 88px;
-            height: 88px;
-            object-fit: contain;
-            padding: 8px;
-            border-radius: 22px;
-            background: #fff;
-            box-shadow: 0 0 22px rgba(76, 165, 255, .32);
+    display: block;
+    position: relative;
+    z-index: 1;
+    width: 88px;
+    height: 88px;
+    object-fit: contain;
 
-            -webkit-animation: breathe 2.5s ease-in-out infinite;
-            animation: breathe 2.5s ease-in-out infinite;
-        }
+    /* Hilangkan kotak putih di belakang logo */
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    box-shadow: none;
+
+    /* Animasi logo tetap ringan */
+    -webkit-animation: breathe 2.5s ease-in-out infinite;
+    animation: breathe 2.5s ease-in-out infinite;
+}
 
         .app-title {
             margin: 8px 0 0;
