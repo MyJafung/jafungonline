@@ -1,29 +1,257 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#071A3B">
     <title>JAFUNG Online</title>
-    
-    <!-- TRIK CACHE BUSTING: Tambahkan ?v=2 agar browser dipaksa membaca file baru -->
+
     <link rel="icon" type="image/x-icon" href="favicon.ico?v=2">
-    
+
     <style>
-        body, html { 
-            margin: 0; 
-            padding: 0; 
-            height: 100%; 
-            overflow: hidden; 
-            background-color: #ffffff;
+        * {
+            box-sizing: border-box;
         }
-        iframe { 
-            width: 100%; 
-            height: 100%; 
-            border: none; 
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #071A3B;
+        }
+
+        /* Aplikasi utama */
+        #appFrame {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            background: #fff;
+            opacity: 0;
+            transition: opacity .45s ease;
+        }
+
+        #appFrame.ready {
+            opacity: 1;
+        }
+
+        /* Layar pembuka */
+        #loader {
+            position: fixed;
+            inset: 0;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 14px;
+            padding: 24px;
+            color: #fff;
+            text-align: center;
+            background:
+                radial-gradient(
+                    circle at 50% 38%,
+                    rgba(35, 110, 220, .34),
+                    transparent 42%
+                ),
+                linear-gradient(145deg, #06142E, #103B78 55%, #071A3B);
+            transition: opacity .4s ease, visibility .4s ease;
+        }
+
+        #loader.hide {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* Efek lingkaran teknologi */
+        .logo-wrap {
+            position: relative;
+            width: 104px;
+            height: 104px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+
+        .logo-wrap::before,
+        .logo-wrap::after {
+            content: "";
+            position: absolute;
+            inset: -8px;
+            border: 1px solid rgba(125, 190, 255, .65);
+            border-radius: 50%;
+            animation: orbit 3s linear infinite;
+        }
+
+        .logo-wrap::after {
+            inset: -16px;
+            border-color: rgba(125, 190, 255, .25);
+            animation-direction: reverse;
+            animation-duration: 5s;
+        }
+
+        .logo {
+            width: 88px;
+            height: 88px;
+            object-fit: contain;
+            padding: 8px;
+            border-radius: 22px;
+            background: #fff;
+            box-shadow: 0 0 28px rgba(76, 165, 255, .4);
+            animation: breathe 2s ease-in-out infinite;
+        }
+
+        .app-title {
+            margin: 8px 0 0;
+            font-size: clamp(25px, 5vw, 34px);
+            font-weight: 800;
+            letter-spacing: .5px;
+            text-shadow: 0 0 18px rgba(92, 170, 255, .4);
+        }
+
+        .subtitle {
+            margin: 0;
+            color: #C7DEFF;
+            font-size: 13px;
+            letter-spacing: .3px;
+        }
+
+        .loading-area {
+            width: min(230px, 75vw);
+            margin-top: 20px;
+        }
+
+        .progress-track {
+            height: 4px;
+            overflow: hidden;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, .17);
+        }
+
+        .progress-bar {
+            width: 38%;
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #60A5FA, #FFFFFF);
+            box-shadow: 0 0 12px #60A5FA;
+            animation: progress 1.4s ease-in-out infinite;
+        }
+
+        .loading-text {
+            margin-top: 13px;
+            color: #D6E7FF;
+            font-size: 12px;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 22px;
+            color: rgba(220, 235, 255, .65);
+            font-size: 10px;
+            letter-spacing: .5px;
+        }
+
+        @keyframes orbit {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.045); }
+        }
+
+        @keyframes progress {
+            0% { transform: translateX(-120%); }
+            100% { transform: translateX(360%); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: .65; }
+            50% { opacity: 1; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: .01ms !important;
+            }
         }
     </style>
 </head>
+
 <body>
-    <iframe src="https://script.google.com/macros/s/AKfycbx2_cfubjPRa_jQEs65VCz9uo3IDVL6f-EkIlUqhH8ouSbRame6NCJn9BXXUmi1oQX0/exec"></iframe>
+
+    <!-- Layar loading -->
+    <div id="loader" role="status" aria-live="polite">
+        <div class="logo-wrap">
+            <!-- Ganti logo-jafung.png dengan nama file logo di GitHub -->
+            <img
+                class="logo"
+                src="logo-jafung.png"
+                alt="Logo JAFUNG Online"
+                onerror="this.style.display='none'"
+            >
+        </div>
+
+        <h1 class="app-title">JAFUNG Online</h1>
+        <p class="subtitle">
+            Sistem Informasi Jabatan Fungsional
+        </p>
+
+        <div class="loading-area">
+            <div class="progress-track">
+                <div class="progress-bar"></div>
+            </div>
+            <div class="loading-text">
+                Menghubungkan ke aplikasi...
+            </div>
+        </div>
+
+        <div class="footer">
+            MOHON TUNGGU SEBENTAR
+        </div>
+    </div>
+
+    <!-- Aplikasi Google Apps Script -->
+    <iframe
+        id="appFrame"
+        title="Aplikasi JAFUNG Online"
+        src="https://script.google.com/macros/s/AKfycbx2_cfubjPRa_jQEs65VCz9uo3IDVL6f-EkIlUqhH8ouSbRame6NCJn9BXXUmi1oQX0/exec"
+        allow="clipboard-read; clipboard-write"
+        onload="hideLoader()"
+    ></iframe>
+
+    <script>
+        (function () {
+            var loader = document.getElementById('loader');
+            var frame = document.getElementById('appFrame');
+            var finished = false;
+
+            window.hideLoader = function () {
+                if (finished) return;
+                finished = true;
+
+                frame.classList.add('ready');
+                loader.classList.add('hide');
+
+                // Lepaskan layar loading dari tampilan setelah transisi.
+                setTimeout(function () {
+                    if (loader.parentNode) {
+                        loader.parentNode.removeChild(loader);
+                    }
+                }, 500);
+            };
+        })();
+    </script>
+
 </body>
 </html>
